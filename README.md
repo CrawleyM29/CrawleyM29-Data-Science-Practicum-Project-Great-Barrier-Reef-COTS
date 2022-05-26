@@ -323,3 +323,9 @@ II: Showing Multiple Consecutive Frames
 # Final Changes to Dataset Training
 
 # References 
+
+Data Files (The amount of images are too big to put in my file):
+https://www.kaggle.com/competitions/tensorflow-great-barrier-reef/data
+
+Liu, J., et al. (2021). The CSIRO Crown-of-Thorn Starfish Detection Dataset. 
+    Cornell University, 1. https://arxiv.org/abs/2111.14311
