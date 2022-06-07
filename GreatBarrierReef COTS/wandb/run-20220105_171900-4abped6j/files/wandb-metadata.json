@@ -1,0 +1,20 @@
+{
+    "os": "Linux-5.10.68+-x86_64-with-debian-bullseye-sid",
+    "python": "3.7.12",
+    "heartbeatAt": "2022-01-05T17:19:08.073188",
+    "startedAt": "2022-01-05T17:19:00.196231",
+    "docker": null,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": [
+        "-f",
+        "/tmp/tmpy31xnc76.json",
+        "--HistoryManager.hist_file=:memory:"
+    ],
+    "state": "running",
+    "program": "kaggle.ipynb",
+    "root": "/kaggle/working",
+    "host": "c151fc732e6a",
+    "username": "root",
+    "executable": "/opt/conda/bin/python"
+}

@@ -1,0 +1,284 @@
+2022-01-05 17:19:00,198 INFO    MainThread:19 [wandb_setup.py:_flush():71] setting env: {'silent': 'true'}
+2022-01-05 17:19:00,198 INFO    MainThread:19 [wandb_setup.py:_flush():71] setting login settings: {'anonymous': 'allow'}
+2022-01-05 17:19:00,198 INFO    MainThread:19 [wandb_init.py:_log_setup():371] Logging user logs to /kaggle/working/wandb/run-20220105_171900-4abped6j/logs/debug.log
+2022-01-05 17:19:00,198 INFO    MainThread:19 [wandb_init.py:_log_setup():372] Logging internal logs to /kaggle/working/wandb/run-20220105_171900-4abped6j/logs/debug-internal.log
+2022-01-05 17:19:00,198 INFO    MainThread:19 [wandb_init.py:_jupyter_setup():321] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x7f21b9d519d0>
+2022-01-05 17:19:00,199 INFO    MainThread:19 [wandb_init.py:init():404] calling init triggers
+2022-01-05 17:19:00,199 INFO    MainThread:19 [wandb_init.py:init():411] wandb.init called with sweep_config: {}
+config: {'competition': 'greatReef', '_wandb_kernel': 'aot'}
+2022-01-05 17:19:00,199 INFO    MainThread:19 [wandb_init.py:init():449] starting backend
+2022-01-05 17:19:00,199 INFO    MainThread:19 [backend.py:_multiprocessing_setup():97] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2022-01-05 17:19:00,222 INFO    MainThread:19 [backend.py:ensure_launched():199] starting backend process...
+2022-01-05 17:19:00,242 INFO    MainThread:19 [backend.py:ensure_launched():205] started backend process with pid: 63
+2022-01-05 17:19:00,245 INFO    MainThread:19 [wandb_init.py:init():458] backend started and connected
+2022-01-05 17:19:00,281 INFO    MainThread:19 [wandb_run.py:_label_probe_notebook():917] probe notebook
+2022-01-05 17:19:01,390 INFO    MainThread:19 [wandb_init.py:init():519] updated telemetry
+2022-01-05 17:19:01,393 INFO    MainThread:19 [wandb_init.py:init():549] communicating current version
+2022-01-05 17:19:02,145 INFO    MainThread:19 [wandb_init.py:init():554] got version response upgrade_message: "wandb version 0.12.9 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2022-01-05 17:19:02,145 INFO    MainThread:19 [wandb_init.py:init():564] communicating run to backend with 30 second timeout
+2022-01-05 17:19:02,554 INFO    MainThread:19 [wandb_init.py:init():592] starting run threads in backend
+2022-01-05 17:19:07,556 INFO    MainThread:19 [wandb_run.py:_console_start():1816] atexit reg
+2022-01-05 17:19:07,557 INFO    MainThread:19 [wandb_run.py:_redirect():1690] redirect: SettingsConsole.WRAP
+2022-01-05 17:19:07,559 INFO    MainThread:19 [wandb_run.py:_redirect():1727] Wrapping output streams.
+2022-01-05 17:19:07,562 INFO    MainThread:19 [wandb_run.py:_redirect():1751] Redirects installed.
+2022-01-05 17:19:07,562 INFO    MainThread:19 [wandb_init.py:init():619] run started, returning control to user process
+2022-01-05 17:19:07,646 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:07,646 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:09,357 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a4e8c1d0>
+2022-01-05 17:19:09,474 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:09,560 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:09,560 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:11,346 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a453b850>
+2022-01-05 17:19:11,588 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:12,209 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:12,210 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:13,871 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a4534490>
+2022-01-05 17:19:14,003 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:14,005 INFO    MainThread:19 [wandb_run.py:_config_callback():962] config_cb ('_wandb', 'visualize', 'frames') {'panel_type': 'Vega2', 'panel_config': {'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'frames_table'}], 'fields': []}]}]}, 'panelDefId': 'wandb/bar/v0', 'transform': {'name': 'tableWithLeafColNames'}, 'fieldSettings': {'label': 'Video ID', 'value': ' '}, 'stringSettings': {'title': '-Frequency of Frames per Video-'}}} None
+2022-01-05 17:19:15,536 INFO    MainThread:19 [wandb_run.py:_config_callback():962] config_cb ('_wandb', 'visualize', 'frames2') {'panel_type': 'Vega2', 'panel_config': {'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'frames2_table'}], 'fields': []}]}]}, 'panelDefId': 'wandb/bar/v0', 'transform': {'name': 'tableWithLeafColNames'}, 'fieldSettings': {'label': 'Sequence ID', 'value': ' '}, 'stringSettings': {'title': '-Frequency of Frames per Sequence-'}}} None
+2022-01-05 17:19:16,689 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:16,690 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:19,156 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a44fd310>
+2022-01-05 17:19:19,397 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:19,671 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:19,671 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:21,381 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a42e94d0>
+2022-01-05 17:19:21,637 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:22,266 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:22,266 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:24,746 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a430bbd0>
+2022-01-05 17:19:24,883 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:25,585 INFO    MainThread:19 [wandb_run.py:_config_callback():962] config_cb ('_wandb', 'visualize', 'annotations') {'panel_type': 'Vega2', 'panel_config': {'userQuery': {'queryFields': [{'name': 'runSets', 'args': [{'name': 'runSets', 'value': '${runSets}'}], 'fields': [{'name': 'id', 'fields': []}, {'name': 'name', 'fields': []}, {'name': '_defaultColorIndex', 'fields': []}, {'name': 'summaryTable', 'args': [{'name': 'tableKey', 'value': 'annotations_table'}], 'fields': []}]}]}, 'panelDefId': 'wandb/histogram/v0', 'transform': {'name': 'tableWithLeafColNames'}, 'fieldSettings': {'value': 'Number of Annotations'}, 'stringSettings': {'title': 'Distribution for Number of Annotations per Frame'}}} None
+2022-01-05 17:19:27,219 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:27,219 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:28,620 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a4553950>
+2022-01-05 17:19:28,865 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:33,804 INFO    MainThread:19 [wandb_init.py:_pause_backend():284] pausing backend
+2022-01-05 17:19:33,804 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:35,381 INFO    MainThread:19 [wandb_init.py:_pause_backend():288] saved code: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21a432a090>
+2022-01-05 17:19:35,521 INFO    MainThread:19 [wandb_init.py:_resume_backend():293] resuming backend
+2022-01-05 17:19:35,522 INFO    MainThread:19 [wandb_run.py:finish():1463] finishing run andrada/GreatBarrierReef/4abped6j
+2022-01-05 17:19:35,535 INFO    MainThread:19 [jupyter.py:save_history():458] saving 11 cells to _session_history.ipynb
+2022-01-05 17:19:35,546 INFO    MainThread:19 [wandb_run.py:_config_callback():962] config_cb ('_wandb', 'session_history') code/_session_history.ipynb None
+2022-01-05 17:19:35,582 INFO    MainThread:19 [jupyter.py:save_ipynb():377] looking for notebook: kaggle.ipynb
+2022-01-05 17:19:37,216 INFO    MainThread:19 [wandb_init.py:_jupyter_teardown():302] saved code and history: <wandb.sdk.wandb_artifacts.Artifact object at 0x7f21712a9050>
+2022-01-05 17:19:37,216 INFO    MainThread:19 [wandb_init.py:_jupyter_teardown():303] cleaning up jupyter logic
+2022-01-05 17:19:37,216 INFO    MainThread:19 [wandb_run.py:_atexit_cleanup():1786] got exitcode: 0
+2022-01-05 17:19:37,216 INFO    MainThread:19 [wandb_run.py:_restore():1758] restore
+2022-01-05 17:19:43,136 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: None
+2022-01-05 17:19:48,238 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: None
+2022-01-05 17:19:53,339 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: None
+2022-01-05 17:19:58,440 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: None
+2022-01-05 17:20:02,348 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 3
+  artifact_count: 13
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1101297
+}
+
+2022-01-05 17:20:02,862 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 1
+  media_count: 3
+  artifact_count: 13
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1101297
+}
+
+2022-01-05 17:20:03,871 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:03,974 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,076 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,178 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,280 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,382 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1101297
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,484 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,587 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,690 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,792 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,895 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:04,998 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:05,101 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:05,204 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:05,307 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:06,310 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+
+2022-01-05 17:20:06,784 INFO    MainThread:19 [wandb_run.py:_wait_for_finish():1916] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 5
+  media_count: 3
+  artifact_count: 13
+  other_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 1425553
+  total_bytes: 1425553
+}
+local_info {
+}
+
