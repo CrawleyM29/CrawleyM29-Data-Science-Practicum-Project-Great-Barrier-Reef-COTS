@@ -314,13 +314,522 @@ Annotation: [{'x': 628, 'y': 321, 'width': 42, 'height': 47}, {'x': 893, 'y': 49
 
 Frame: Has a total of 18 COTS in the frame.
 
-II: Showing Multiple Consecutive Frames
+**II: Showing Multiple Consecutive Frames**
 
-# *This is in the Process for training*
+I used the following code to look at many consectuive frames within three sequences:
 
-# Bounding Box Agmentation
+    def show_multiple_images(seq_id, frame_no):
+        '''Shows multiple images within a sequence.
+        seq_id: a number corresponding with the sequence unique ID
+        frame_no: a list containing the first and last frame to plot'''
+    
+**Selecting a few image paths & their annotations** 
+        paths = list(train_df[(train_df["sequence"]==seq_id) & 
+                    (train_df["sequence_frame"]>=frame_no[0]) & 
+                    (train_df["sequence_frame"]<=frame_no[1])]["path"])
+        annotations = list(train_df[(train_df["sequence"]==seq_id) & 
+                     (train_df["sequence_frame"]>=frame_no[0]) & 
+                     (train_df["sequence_frame"]<=frame_no[1])]["annotations"])
+**Plot**
+
+        fig, axs = plt.subplots(2, 3, figsize=(22, 10))
+        axs = axs.flatten()
+        fig.suptitle(f"Showing consecutive frames for Sequence ID: {seq_id}", fontsize = 16)
+
+        for k, (path, annot) in enumerate(zip(paths, annotations)):
+            axs[k].set_title(f"Frame No: {frame_no[0]+k}", fontsize = 12)
+            show_image(path, annot, axs[k])
+
+            plt.tight_layout()
+            plt.show()
+            
+The below shows zero COTS that were identified within the frame:
+
+    seq_id = 44160
+    frame_no = [51, 56]
+
+    show_multiple_images(seq_id, frame_no)
+    
+   
+Next, we have roughly 2 COTS identified in the frames.  However, the first three frames show 1 COTS while the second COTS also shows a visible but *NOT* identified Crown of Thorns Starfish.  Later in the annotation, we see that this COTS is identified at the 4th frame and beyond.  The sequence ID is 59337 (frames 38, 39, 40, 41, 42, and 43).
+
+We need to improve these images to help idenfity the presence of COTS within the frames better.  Perhaps by manipulating what we know: the color tones which are yellow, green, and blue and also textures present in the images.  I will be using sequence 53708 with frames 801 and 806.
+
+    seq_id = 53708
+    frame_no = [801, 806]
+
+show_multiple_images(seq_id, frame_no)
+
+**III: Annotated Images versus No Annotated Image Comparison**
+
+Lets take a look at random frames and see if they look significantly different (viewing multiple images).
+
+    def plot_comparison(no_annot, state=24):
+    
+**Select image paths & their annotations**
+
+        paths_compare = list(train_df[train_df["no_annotations"]==no_annot]\
+                            .sample(n=9, random_state=state)["path"])
+        annotations_compare = list(train_df[train_df["no_annotations"]==no_annot]\
+                                .sample(n=9, random_state=state)["annotations"])
+
+**Plot**
+
+        fig, axs = plt.subplots(3, 3, figsize=(23, 13))
+        axs = axs.flatten()
+        fig.suptitle(f"{no_annot} annotations", fontsize = 20)
+
+        for k, (path, annot) in enumerate(zip(paths_compare, annotations_compare)):
+            video_id = path.split("/")[4]
+            frame_id = path.split("/")[-1].split(".")[0]
+        
+            axs[k].set_title(f"{video_id} | Frame {frame_id}",
+                         fontsize = 12)
+            show_image(path, annot, axs[k])
+
+        plt.tight_layout()
+        plt.show()
+
+**No annotations**
+
+        no_annot = 0
+        plot_comparison(no_annot, state=24)
+
+**5 annotations**
+
+        no_annot = 5
+        plot_comparison(no_annot, state=24)
+
+**17 annotations**
+
+        no_annot = 17
+        plot_comparison(no_annot, state=24)
+        
+They do look very different in comparison.  We are getting closer.
+
+# 3. Bounding Box Agmentation
+
+Section three will be aimed at exploring different ways to complete image agmentation while adjusting the annotations (bounding boxes) to match different types of agmentations applied on the image which requires formating the annotations again.  We do this with a bit of math: x1 = x, y1 = y, x2 = x + width, y2 = y + height.  
+
+We are doing this for the COTS that need a bigger bounding box.
+
+    def format_annotations(x):
+        '''Changes annotations from format {x, y, width, height} to {x1, y1, x2, y2}.
+        x: a string of the initial format.'''
+    
+        annotations = eval(x)
+        new_annotations = []
+
+        if annotations:
+            for annot in annotations:
+                new_annotations.append([annot["x"],
+                                    annot["y"],
+                                    annot["x"]+annot["width"],
+                                    annot["y"]+annot["height"]
+                                   ])
+    
+        if new_annotations: return str(new_annotations)
+        else: return "[]"
+        
+
+
+**Creating a new column with new formating annotation**
+
+train_df["f_annotations"] = train_df["annotations"].apply(lambda x: format_annotations(x))
+
+The new formating annotations can be used as a new function to make future edits easier.  The function will also display the new augmented image--a win, win.
+
+        def show_image_bbox(img, annot, axs=None):
+            '''Shows an image and marks any COTS annotated within the frame.
+            img: the output from cv2.imread()
+            annot: FORMATED annotation'''
+    
+**If plotting 1 image**
+
+        if axs==None:
+            fig, axs = plt.subplots(figsize=(23, 8))
+    
+        axs.imshow(img)
+
+        if annot:
+            for a in annot:
+                rect = patches.Rectangle((a[0], a[1]), a[2]-a[0], a[3]-a[1], 
+                                     linewidth=3, edgecolor="#FF6103", facecolor='none')
+                axs.add_patch(rect)
+
+        axs.axis("off")
+    
+**3.1: Random Horizontal Flips of the Images**
+
+We will be creating a class that will randomly flip the images and boudning box with it.  We will being using cv2 as it works with BGR images.  This also requires us to convert the image to be able to view the original image within RGB by using cv2.cvtColor (cv2.imread(path), cv2.COLOR_BGR2RGB).
+
+        class RHorizontalFlip(object):
+
+            def __init__(self, p=0.5):
+                # p = probability of the image to be flipped
+                # set p = 1 to always flip
+                self.p = p
+        
+            def __call__(self, img, bboxes):
+            '''img : the image to be flipped
+            bboxes : the annotations within the image'''
+        
+            # Convert bboxes
+            bboxes = np.array(bboxes)
+        
+            img_center = np.array(img.shape[:2])[::-1]/2
+            img_center = np.hstack((img_center, img_center))
+        
+            # If random number that is between 0 and 1 < probability p
+            if random.random() < self.p:
+                # Reverse image elements in the 1st dimension
+                img =  img[:,::-1,:]
+                bboxes[:,[0,2]] = bboxes[:,[0,2]] + 2*(img_center[[0,2]] - bboxes[:,[0,2]])
+            
+                # Convert the bounding boxes
+                box_w = abs(bboxes[:,0] - bboxes[:,2])
+                bboxes[:,0] -= box_w
+                bboxes[:,2] += box_w
+            
+            return img, bboxes.tolist()
+
+**Example**
+
+An example of an original image and a flipped image
+
+*Taking an example*
+
+        path = list(train_df[train_df["no_annotations"]==18]["path"])[0]
+
+        img_original = cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2RGB)
+        annot_original = eval(list(train_df[train_df["no_annotations"]==18]["f_annotations"])[0])
+
+*Horizontal Flip*
+
+        horizontal_flip = RandomHorizontalFlip(p=1)  
+        img_flipped, annot_flipped = horizontal_flip(img_original, annot_original)
+
+*Showing Before and After*
+
+        fig, axs = plt.subplots(1, 2, figsize=(23, 10))
+        axs = axs.flatten()
+        fig.suptitle(f"(Random) Horizontal Flip", fontsize = 20)
+
+        axs[0].set_title("Original Image", fontsize = 20)
+        show_image_bbox(img_original, annot_original, axs=axs[0])
+
+        axs[1].set_title("With Horizontal Flip", fontsize = 20)
+        show_image_bbox(img_flipped, annot_flipped, axs[1])
+
+        plt.tight_layout()
+plt.show()
+
+Viewing the images, you can see that they are a flipped image of one another.
+
+**3.2: Random Scaling** 
+
+Scaling images descreases the original size--our bounding boxes.  For this project, bounding boxes already have an area that is less than 25% in its remaining transformation image that is dropped.  Our resolution will be maintained while the remaining area (if there is any) is then filled with the color black with the following class:
+
+        class RScale(object):
+
+            def __init__(self, scale = 0.2, diff = False):
+        
+                # scale must always be a positive number
+                self.scale = scale
+                self.scale = (max(-1, -self.scale), self.scale)
+        
+                # Maintain the aspect ratio
+                # (scaling factor remains the same for width & height)
+                self.diff = diff
+        
+        
+            def __call__(self, img, bboxes):
+        
+                # Convert bboxes
+                bboxes = np.array(bboxes)
+
+                #Chose a random digit to scale by 
+                img_shape = img.shape
+
+                if self.diff:
+                    scale_x = random.uniform(*self.scale)
+                    scale_y = random.uniform(*self.scale)
+                else:
+                    scale_x = random.uniform(*self.scale)
+                    scale_y = scale_x
+
+                resize_scale_x = 1 + scale_x
+                resize_scale_y = 1 + scale_y
+
+                # Resize the image by scale factor
+                img = cv2.resize(img, None, fx = resize_scale_x, fy = resize_scale_y)
+
+                bboxes[:,:4] = bboxes[:,:4] * [resize_scale_x, resize_scale_y, resize_scale_x, resize_scale_y]
+
+                # The black image (the remaining area after we have clipped the image)
+                canvas = np.zeros(img_shape, dtype = np.uint8)
+
+                # Determine the size of the scaled image
+                y_lim = int(min(resize_scale_y,1)*img_shape[0])
+                x_lim = int(min(resize_scale_x,1)*img_shape[1])
+
+                canvas[:y_lim,:x_lim,:] =  img[:y_lim,:x_lim,:]
+
+                img = canvas
+                # Adjust the bboxes - remove all annotations that dissapeared after the scaling
+                bboxes = clip_box(bboxes, [0,0,1 + img_shape[1], img_shape[0]], 0.25)
+
+                return img, bboxes.tolist()
+                
+**Example of original versus scaled image**
+
+I will be using a random seed while scaling and showing the before and after.
+
+random.seed(26)
+
+*Scaling*
+
+        scale = RandomScale(scale=1.3, diff = False) 
+        img_scaled, annot_scaled = scale(img_original, annot_original)
+
+
+
+*Show the Before and After*
+
+        fig, axs = plt.subplots(1, 2, figsize=(22, 10))
+        axs = axs.flatten()
+        fig.suptitle(f"(Random) Image Scaling", fontsize = 18)
+
+        axs[0].set_title("Original Image", fontsize = 18)
+        show_image_bbox(img_original, annot_original, axs=axs[0])
+
+        axs[1].set_title("Scaled (zoomed in) Image", fontsize = 18)
+        show_image_bbox(img_scaled, annot_scaled, axs[1])
+
+        plt.tight_layout()
+        plt.show()
+
+The images show the original image with 18 boxes representing COTS count while the scaled image being zoomed in that shows 11 COTS count but in more detail.
+
+**3.3: Random Translate**
+
+Translating an image requires moving it around on a canvas. This represents looking through a lence of a camera at a blank piece of paper on a table. You then move it right, left, up, or down, leaving parts of the table exposed while some of the paper is not visible.  I will be creating a R(andom)Translate class to complete this step.
+
+        class RTranslate(object):
+
+            def __init__(self, translate = 0.2, diff = False):
+        
+                self.translate = translate
+                self.translate = (-self.translate, self.translate)
+            
+                # Maintain the aspect ratio
+                # (scaling factor remains the same for width & height)
+                self.diff = diff
+        
+            def __call__(self, img, bboxes):  
+        
+                # Convert bboxes
+                bboxes = np.array(bboxes)
+        
+                # Chose a random digit to scale
+                img_shape = img.shape
+
+                # Percentage of the dimension of the image to translate
+                translate_factor_x = random.uniform(*self.translate)
+                translate_factor_y = random.uniform(*self.translate)
+
+                if not self.diff:
+                    translate_factor_y = translate_factor_x
+
+                canvas = np.zeros(img_shape).astype(np.uint8)
+
+                corner_x = int(translate_factor_x*img.shape[1])
+                corner_y = int(translate_factor_y*img.shape[0])
+
+                #Change the origin to the top-left corner of the translated box
+                orig_box_cords =  [max(0,corner_y), max(corner_x,0), min(img_shape[0], corner_y + img.shape[0]), min(img_shape[1],corner_x +         img.shape[1])]
+
+                mask = img[max(-corner_y, 0):min(img.shape[0], -corner_y + img_shape[0]), max(-corner_x, 0):min(img.shape[1], -corner_x + img_shape[1]),:]
+                canvas[orig_box_cords[0]:orig_box_cords[2], orig_box_cords[1]:orig_box_cords[3],:] = mask
+                img = canvas
+
+                bboxes[:,:4] += [corner_x, corner_y, corner_x, corner_y]
+
+                bboxes = clip_box(bboxes, [0,0,img_shape[1], img_shape[0]], 0.25)
+
+                return img, bboxes.tolist()
+                
+**Example**
+
+        # Translate
+        translate = RandomTranslate(translate=0.4, diff = False) 
+        img_translated, annot_translated = translate(img_original, annot_original)
+
+        # Show the Before and After
+        fig, axs = plt.subplots(1, 2, figsize=(23, 10))
+        axs = axs.flatten()
+        fig.suptitle(f"(Random) Image Translation", fontsize = 20)
+
+        axs[0].set_title("Original Image", fontsize = 20)
+        show_image_bbox(img_original, annot_original, axs=axs[0])
+
+        axs[1].set_title("Translated (shifted) Image", fontsize = 20)
+        show_image_bbox(img_translated, annot_translated, axs[1])
+
+        plt.tight_layout()
+        plt.show()
+
+We can see the original image is centered while our translated image has a black border (the paper) on the right to bottom of the image. We still have 18 total COTS for both images.
+
+**3.4: Random Shearing**
+
+We will be shearing the image (shifted like it was pushed from the corner and opposite to the other like a parallelogram). To do this, I'll create a R(andom)Sher class.
+
+        class RShear(object):
+
+            def __init__(self, shear_factor = 0.2):
+        
+                self.shear_factor = shear_factor
+                self.shear_factor = (-self.shear_factor, self.shear_factor)
+        
+                shear_factor = random.uniform(*self.shear_factor)
+        
+        
+            def __call__(self, img, bboxes):
+        
+                # Convert bboxes
+                bboxes = np.array(bboxes)
+
+                # Get the shear factor and size of the image
+                shear_factor = random.uniform(*self.shear_factor)
+                w,h = img.shape[1], img.shape[0]
+
+                # Flip the image and boxes horizontally
+                if shear_factor < 0:
+                    img, bboxes = HorizontalFlip()(img, bboxes)
+
+                # Apply the shear transformation
+                M = np.array([[1, abs(shear_factor), 0],[0,1,0]])
+                nW =  img.shape[1] + abs(shear_factor*img.shape[0])
+
+                bboxes[:,[0,2]] += ((bboxes[:,[1,3]]) * abs(shear_factor) ).astype(int) 
+
+                # Transform using cv2 warpAffine (like in rotation)
+                img = cv2.warpAffine(img, M, (int(nW), img.shape[0]))
+
+                # Flip the image back again
+                if shear_factor < 0:
+                    img, bboxes = HorizontalFlip()(img, bboxes)
+
+                # Resize
+                img = cv2.resize(img, (w,h))
+
+                scale_factor_x = nW / w
+                bboxes[:,:4] = bboxes[:,:4] / [scale_factor_x, 1, scale_factor_x, 1] 
+        
+                return img, bboxes.tolist()
+                
+**Example**
+
+        random.seed(25)
+
+        # Translate
+        shear = RandomShear(shear_factor=0.9) 
+        img_sheared, annot_sheared = shear(img_original, annot_original)
+
+
+
+        # Show the Before and After
+        fig, axs = plt.subplots(1, 2, figsize=(23, 10))
+        axs = axs.flatten()
+        fig.suptitle(f"(Random) Image Shear", fontsize = 20)
+
+        axs[0].set_title("Original Image", fontsize = 20)
+        show_image_bbox(img_original, annot_original, axs=axs[0])
+
+        axs[1].set_title("Sheared Image", fontsize = 20)
+        show_image_bbox(img_sheared, annot_sheared, axs[1])
+
+        plt.tight_layout()
+        plt.show()
+
+We can see the unchanged oringial image versus the slanted (sheared) image with a different viewpoint for the bounding boxes.
+
+**Logging Augmented Images to Dashboard**
+
+        def wandb_bboxes(image, annotations):
+            image: the cv2.imread() output
+            annotations: the FORMATED annotations from the train dataset'''
+    
+            all_annotations = []
+            if annotations:
+                for annot in annotations:
+                    data = {"position": {
+                                    "minX": annot[0],
+                                    "minY": annot[1],
+                                    "maxX": annot[2],
+                                    "maxY": annot[3]
+                                },
+                            "class_id" : 1,
+                            "domain" : "pixel"}
+                    all_annotations.append(data)
+    
+            return wandb.Image(image, 
+                            boxes={"ground_truth": {"box_data": all_annotations}})
+
+        # Log all augmented images to the Dashboard
+        wandb.log({"flipped": wandb_bboxes(img_flipped, annot_flipped)})
+        wandb.log({"scaled": wandb_bboxes(img_scaled, annot_scaled)})
+        wandb.log({"translated": wandb_bboxes(img_translated, annot_translated)})
+        wandb.log({"rotated": wandb_bboxes(img_rotated, annot_rotated)})
+        wandb.log({"sheared": wandb_bboxes(img_sheared, annot_sheared)})
+
+        wandb.finish()
+
+
+
+Looks great on the dashboard.
 
 # Final Changes to Dataset Training
+
+I will be using COCO format which is an Object Detection model which locates objects within images via boudning boxes.  These bounding boxes are useful as they can have many ways of being displayed with no wrong way to locate a rectangle within our images.
+
+*(x,y,widgeh, height)*: we are using this in our training dataset (this is COCO format)
+
+*(x1,y1,x2,y2)*: a formated version that we used for the BBox Augmentation phase that's also called (xmin,ymin,xmax,ymax)  This is used within Faster RCNN, Fast RCNN, RCNN, and SSD models.
+
+*(x_center, y_center, width, height)*: A YOLO format that is used when training a YOLO model.  x_center, y_center are normalized coordinates in the center of bounding boxes, with width, height are normalized width and height of the image.
+
+**COCO**: Commone Objects in Context, a database that pushes to aim towards support and improvment of models for Object Detection, Image Captioning, and Instance Segmentation.
+
+        # Create sepparate paths for images and their labels (annotations)
+        # these will come in handy later for the YOLO model
+        train_df["path_images"] = "/kaggle/images/video_" + train_df["video_id"].astype(str) + "_" + \
+                                                train_df["video_frame"].astype(str) + ".jpg"
+        train_df["path_labels"] = "/kaggle/labels/video_" + train_df["video_id"].astype(str) + "_" + \
+                                                train_df["video_frame"].astype(str) + ".txt"
+
+        # Save the width and height of the images
+        # it is the same for the entire dataset
+        train_df["width"] = 1280
+        train_df["height"] = 720
+
+        # Simplify the annotation format
+        train_df["coco_bbox"] = train_df["annotations"].apply(lambda annot: [list(item.values()) for item in eval(annot)])
+
+        # Data Sample
+        train_df.sample(5, random_state=24)
+
+        # Save dataset
+        train_df.to_csv("train.csv", index=False)
+
+
+        # Save dataset Artifact
+        save_dataset_artifact(run_name="save-train-data",
+                            artifact_name="train_meta",
+                            path="../input/2021-greatbarrierreef-prep-data/train.csv")
+
+ We have successfully trained our boxes  according to shape, movement, and even better detailed       
 
 # References 
 
