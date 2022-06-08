@@ -179,10 +179,9 @@ We now know that each sequence has the freames numerotated in the order in which
                         log="annotations")
 
 
-**Uunique sequence values List**
+**Unique sequence values List**
 
-sequences = list(train_df["sequence"].unique())
-
+    sequences = list(train_df["sequence"].unique())
     plt.figure(figsize=(23,20))
     plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.2, hspace=0.5)
     plt.suptitle("Frequency of annotations on sequence length", fontsize = 20)
