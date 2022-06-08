@@ -123,8 +123,8 @@ The videos are split into sequences: one video is split into four sequences whil
     ax2.title.set_text("Frequency of Frames per Sequence")
     ax2.set_xticks([])
 
-sns.despine(top=True, right=True, left=True, bottom=True, ax=ax1)
-sns.despine(top=True, right=True, left=True, bottom=True, ax=ax2)
+    sns.despine(top=True, right=True, left=True, bottom=True, ax=ax1)
+    sns.despine(top=True, right=True, left=True, bottom=True, ax=ax2)
 
 **2. Target Variable** -- annotations
 
@@ -212,13 +212,13 @@ I want to explore the frames (.jpg image) to get a better understanding on what 
 
 **Experiment**
 
-    run = wandb.init(project='GreatBarrierReef', name='ExampleImages', config=CONFIG, anonymous="allow")
+        run = wandb.init(project='GreatBarrierReef', name='ExampleImages', config=CONFIG, anonymous="allow")
 
 **Creating a "path" column containing full path to the frames**
 
-    base_folder = "../input/tensorflow-great-barrier-reef/train_images"
+        base_folder = "../input/tensorflow-great-barrier-reef/train_images"
 
-    train_df["path"] = base_folder + "/video_" + \
+        train_df["path"] = base_folder + "/video_" + \
                     train_df['video_id'].astype(str) + "/" +\
                     train_df['video_frame'].astype(str) +".jpg"
 
